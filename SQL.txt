@@ -1,0 +1,43 @@
+1) 
+SELECT PARTICIPANT_NAME
+FROM PARTICIPANT AS T1 
+WHERE TASK_COUNT > 
+     (SELECT TASK_COUNT 
+      FROM PARTICIPANT AS T2 
+      WHERE T1.TEAM_LEAD_ID = T2.PARTICIPANT_ID);
+
+2) 
+SELECT PARTICIPANT_NAME 
+FROM PARTICIPANT as T1 
+inner join 
+	(select PROJECT_ID, max(Task_count) as maxTask
+	from participant
+	group by PROJECT_ID) as T2
+	on t1.project_id = t2.project_id and t1.task_count = t2.maxTask;
+
+3)
+select PROJECT_ID
+from participant
+group by PROJECT_ID having count(participant_id )<= 3;
+
+4)
+SELECT PARTICIPANT_NAME
+FROM PARTICIPANT AS T1 
+where exists 
+     (SELECT PARTICIPANT_NAME 
+      FROM PARTICIPANT AS T2 
+      WHERE T1.TEAM_LEAD_ID = T2.PARTICIPANT_ID and t1.project_id != t2.project_id);
+
+5)
+select PROJECT_ID
+from participant
+group by PROJECT_ID having sum(Task_count) = (select max(t1.sumTask) from 
+(select PROJECT_ID, sum(Task_count) as sumTask
+from participant
+group by PROJECT_ID) as t1);
+
+
+
+
+
+
